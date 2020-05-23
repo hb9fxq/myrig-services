@@ -1,0 +1,4 @@
+{
+  "ListenString": "0.0.0.0:8180",
+  "RotorstatusUrl": "http://192.168.92.17/rotatorcontrol/get"
+}
