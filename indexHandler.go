@@ -14,7 +14,6 @@ func Index(w http.ResponseWriter, r *http.Request) {
 
 	appStatus := AppStatus{Status: "Active", Connected: true}
 
-	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 

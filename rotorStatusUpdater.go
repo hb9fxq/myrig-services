@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -27,22 +26,22 @@ func updateRotorStatus() {
 	getResult := getHttpString(appCtx.RotorstatusUrl)
 	appCtx.RotorStatus.Deg = 1000
 	if len(getResult) == 0 {
-		fmt.Printf("/rotatorcontrol/get operation failed\n")
+		log.Printf("/rotatorcontrol/get operation failed\n")
 	}
 
-	fmt.Printf("----> rotatorcontrol/get %s\n", getResult)
+	//log.Printf("----> rotatorcontrol/get %s\n", getResult)
 
 	tokens := strings.Split(getResult, "|")
 
 	stateInt, err := strconv.Atoi(tokens[3])
 
 	if err != nil {
-		fmt.Printf("HTTP GET ERR: %s\n", err)
+		log.Printf("HTTP GET ERR: %s\n", err)
 	} else {
 		appCtx.RotorStatus.Deg = stateInt
 	}
 
-	log.Printf("Poll.... %d", appCtx.RotorStatus.Deg)
+	//log.Printf("Poll.... %d", appCtx.RotorStatus.Deg)
 }
 
 func getHttpString(url string) (responseString string) {
