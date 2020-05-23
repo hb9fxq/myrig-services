@@ -17,7 +17,7 @@ func startPollingRotor() {
 
 	for {
 		updateRotorStatus()
-		<-time.After(30 * time.Second)
+		<-time.After(10 * time.Second)
 		updateRotorStatus()
 	}
 }
