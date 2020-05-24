@@ -31,16 +31,18 @@ func CreateRouter() *mux.Router {
 			"GET",
 			"/debug",
 			false,
-			handlers.DubugHandler,
+			handlers.DebugHandler,
 			appCtx,
 		},
 	}
 
 	router := mux.NewRouter().StrictSlash(true)
-	for _, route := range routes {
+	for idx, _ := range routes {
+		route := routes[idx]
+
 		var handler http.Handler
-		handler = route.Handler(route)
-		handler = addCommonHandlers(handler, route)
+		handler = route.Handler(&route)
+		handler = addCommonHandlers(handler, &route)
 
 		router.
 			Methods(route.Method).
@@ -53,8 +55,10 @@ func CreateRouter() *mux.Router {
 	return router
 }
 
-func addCommonHandlers(handler http.Handler, route globals.Route) http.Handler {
-	handler = handlers.HttpAuthChainHandler(appCtx, handler, route)
-	handler = handlers.LoggerChainHandler(handler, route.Name)
+func addCommonHandlers(handler http.Handler, route *globals.Route) http.Handler {
+
+	handler = handlers.LoggerChainHandler(handler, route)
+	handler = handlers.HttpAuthChainHandler(handler, route)
+
 	return handler
 }

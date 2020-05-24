@@ -1,15 +1,31 @@
 package handlers
 
 import (
+	"fmt"
+	"github.com/google/uuid"
 	"github.com/krippendorf/myrig-services/globals"
 	"log"
 	"net/http"
 )
 
-func HttpAuthChainHandler(ctx *globals.ApplicationContext, inner http.Handler, route globals.Route) http.HandlerFunc {
+func HttpAuthChainHandler(inner http.Handler, route *globals.Route) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 
+		myrigRequestSerial := fmt.Sprintf("mr-public-%s", uuid.New().String())
+
 		if route.IsPublic {
+			w.Header().Set("X-myrig-requestserial", myrigRequestSerial)
+			r.Header.Set("X-myrig-requestserial", myrigRequestSerial)
+
+			log.Printf(
+				"AUTH:PUBLIC Method: %s RequestURI:%s Route:%s IP:%s RequestSerial:%s",
+				r.Method,
+				r.RequestURI,
+				route.Name,
+				GetIP(r),
+				myrigRequestSerial,
+			)
+
 			inner.ServeHTTP(w, r)
 			return
 		}
@@ -19,21 +35,25 @@ func HttpAuthChainHandler(ctx *globals.ApplicationContext, inner http.Handler, r
 
 		var userAuthed = false
 
-		for _, rKey := range ctx.ApiKeys {
+		for _, rKey := range route.AppCtx.ApiKeys {
 			if rKey.User == apiUser && rKey.Key == apiKey {
 				userAuthed = true
+				myrigRequestSerial = fmt.Sprintf("mr-%s-%s", rKey.User, uuid.New().String())
+				w.Header().Set("X-myrig-requestserial", myrigRequestSerial)
+				r.Header.Set("X-myrig-requestserial", myrigRequestSerial)
 				break
 			}
 		}
 
 		if userAuthed {
 			log.Printf(
-				"AUTHORIZED User:%s Method: %s RequestURI:%s Route:%s IP:%s",
+				"AUTH:AUTHORIZED User:%s Method: %s RequestURI:%s Route:%s IP:%s RequestSerial:%s",
 				apiUser,
 				r.Method,
 				r.RequestURI,
 				route.Name,
 				GetIP(r),
+				myrigRequestSerial,
 			)
 
 			inner.ServeHTTP(w, r)
@@ -46,7 +66,7 @@ func HttpAuthChainHandler(ctx *globals.ApplicationContext, inner http.Handler, r
 				GetIP(r),
 			)
 
-			http.Error(w, "Not authorized", 401)
+			w.WriteHeader(http.StatusUnauthorized)
 		}
 
 	}
@@ -54,6 +74,10 @@ func HttpAuthChainHandler(ctx *globals.ApplicationContext, inner http.Handler, r
 
 func GetAuthMyrigUser(r *http.Request) string {
 	return r.Header.Get("X-myrig-user")
+}
+
+func GetAuthMyrigRequestSerial(r *http.Request) string {
+	return r.Header.Get("X-myrig-requestserial")
 }
 
 func getAuthMyrigKey(r *http.Request) string {

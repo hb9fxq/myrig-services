@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-func RotorHandler(route globals.Route) http.HandlerFunc {
+func RotorHandler(route *globals.Route) http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 

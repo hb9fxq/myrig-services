@@ -27,4 +27,4 @@ type Route struct {
 	AppCtx   *ApplicationContext
 }
 
-type AppHandlerFunc func(Route) http.HandlerFunc
+type AppHandlerFunc func(*Route) http.HandlerFunc
