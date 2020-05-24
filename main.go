@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/krippendorf/myrig-services/globals"
 	"github.com/spf13/viper"
 	"log"
 	"net/http"
@@ -9,10 +10,10 @@ import (
 	"syscall"
 )
 
-var appCtx *ApplicationContext
+var appCtx *globals.ApplicationContext
 
 func main() {
-	var appContext ApplicationContext
+	var appContext globals.ApplicationContext
 	appCtx = &appContext
 
 	readApplicationConfig()

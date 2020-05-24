@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/krippendorf/myrig-services/globals"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -11,7 +12,7 @@ import (
 
 func startPollingRotor() {
 
-	var rotorStatus RotorStatusType
+	var rotorStatus globals.RotorStatusType
 	appCtx.RotorStatus = &rotorStatus
 	appCtx.RotorStatus.Deg = 1000
 
@@ -29,10 +30,7 @@ func updateRotorStatus() {
 		log.Printf("/rotatorcontrol/get operation failed\n")
 	}
 
-	//log.Printf("----> rotatorcontrol/get %s\n", getResult)
-
 	tokens := strings.Split(getResult, "|")
-
 	stateInt, err := strconv.Atoi(tokens[3])
 
 	if err != nil {
@@ -40,8 +38,6 @@ func updateRotorStatus() {
 	} else {
 		appCtx.RotorStatus.Deg = stateInt
 	}
-
-	//log.Printf("Poll.... %d", appCtx.RotorStatus.Deg)
 }
 
 func getHttpString(url string) (responseString string) {
