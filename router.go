@@ -26,6 +26,14 @@ func CreateRouter() *mux.Router {
 			true,
 			handlers.RotorHandler,
 			appCtx,
+		},
+		globals.Route{
+			"rotor",
+			"GET",
+			"/ant",
+			true,
+			handlers.AntHandler,
+			appCtx,
 		}, globals.Route{
 			"debug",
 			"GET",

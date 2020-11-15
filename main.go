@@ -19,6 +19,7 @@ func main() {
 	readApplicationConfig()
 
 	go startPollingRotor()
+	go startPollingAnt()
 
 	go func() {
 		router := CreateRouter()

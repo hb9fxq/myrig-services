@@ -11,11 +11,17 @@ type ApplicationContext struct {
 	ListenString   string
 	RotorstatusUrl string
 	RotorStatus    *RotorStatusType
+	AntennaStatus  *AntennaStatusType
 	ApiKeys        []*ApiKeys
 }
 
 type RotorStatusType struct {
 	Deg int
+}
+
+type AntennaStatusType struct {
+	Ant     string
+	Pattern string
 }
 
 type Route struct {

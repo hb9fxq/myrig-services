@@ -11,7 +11,6 @@ import (
 )
 
 func startPollingRotor() {
-
 	var rotorStatus globals.RotorStatusType
 	appCtx.RotorStatus = &rotorStatus
 	appCtx.RotorStatus.Deg = 1000
