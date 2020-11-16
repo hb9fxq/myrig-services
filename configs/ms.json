@@ -4,6 +4,8 @@
   "ApiKeys": [
     {"User":"admin", "Key":"trollololololol123"},
     {"User":"admin2", "Key":"22222trollololololol123"}
-  ]
+  ],
+  "MqttBroker" : "tcp://192.168.92.7:1883",
+  "MqttClientId" : "dev-myrig-services"
 
 }

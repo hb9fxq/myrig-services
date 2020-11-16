@@ -16,6 +16,7 @@ var f mqtt.MessageHandler = func(client mqtt.Client, msg mqtt.Message) {
 
 	appCtx.AntennaStatus.Ant = strings.TrimSuffix(tokens[0], "\r\n")
 	appCtx.AntennaStatus.Pattern = strings.TrimSuffix(strings.Split(tokens[1], ">")[1], "\r\n")
+	appCtx.AntennaStatus.LastUpdate = time.Now()
 }
 
 func startPollingAnt() {
@@ -24,10 +25,11 @@ func startPollingAnt() {
 	appCtx.AntennaStatus.Ant = "U"
 	appCtx.AntennaStatus.Pattern = "STATE>????????????"
 
-	opts := mqtt.NewClientOptions().AddBroker("tcp://192.168.92.7:1883").SetClientID("myrig-services") //TODO: cfg
+	opts := mqtt.NewClientOptions().AddBroker(appCtx.MqttBroker).SetClientID(appCtx.MqttClientId)
 	opts.SetKeepAlive(2 * time.Second)
 	opts.SetDefaultPublishHandler(f)
 	opts.SetPingTimeout(1 * time.Second)
+	opts.SetCleanSession(false)
 
 	c := mqtt.NewClient(opts)
 	if token := c.Connect(); token.Wait() && token.Error() != nil {

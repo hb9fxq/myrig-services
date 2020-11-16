@@ -1,6 +1,9 @@
 package globals
 
-import "net/http"
+import (
+	"net/http"
+	"time"
+)
 
 type ApiKeys struct {
 	User string
@@ -13,6 +16,8 @@ type ApplicationContext struct {
 	RotorStatus    *RotorStatusType
 	AntennaStatus  *AntennaStatusType
 	ApiKeys        []*ApiKeys
+	MqttBroker     string
+	MqttClientId   string
 }
 
 type RotorStatusType struct {
@@ -20,8 +25,9 @@ type RotorStatusType struct {
 }
 
 type AntennaStatusType struct {
-	Ant     string
-	Pattern string
+	Ant        string
+	Pattern    string
+	LastUpdate time.Time `json:"LastUpdate"`
 }
 
 type Route struct {
