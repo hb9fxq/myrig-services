@@ -26,7 +26,7 @@ func KiwistatusHandler(route *globals.Route) http.HandlerFunc {
 		strRotorOpti := strconv.Itoa(globals.GlobalAppCtx.RotorStatus.Deg)
 		strRotorLoop := strconv.Itoa(globals.GlobalAppCtx.LoopRotorStatus.Deg)
 
-		switch globals.GlobalAppCtx.AntennaStatus.Ant {
+		switch globals.GlobalAppCtx.AntennaStatus.Ant { // TODO: add antenna map to app config....
 		case "1B":
 			kiwistatus.HeaderText += "Optibeam@" + strRotorOpti + "°"
 		case "2B":
@@ -34,7 +34,7 @@ func KiwistatusHandler(route *globals.Route) http.HandlerFunc {
 		case "3B":
 			kiwistatus.HeaderText += "MagneticLoop@" + strRotorLoop + "°"
 		default:
-			kiwistatus.HeaderText = "FLEXRADIO in use, KIWI SDR ANT Disabled"
+			kiwistatus.HeaderText = "FLEXRADIO is in use. KIWI SDR disabled, come back later :-)"
 		}
 
 		if err := json.NewEncoder(w).Encode(kiwistatus); err != nil {

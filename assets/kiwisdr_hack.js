@@ -14,13 +14,13 @@
     function updateAntennaPos(){
 
     fetch("https://schwarzenburg.myrig.ch/myrig-services/rotor")
-    //prep:fetch("https://schwarzenburg.myrig.ch/myrig-services/kiwi")
+        // bald, ja: fetch("https://schwarzenburg.myrig.ch/myrig-services/kiwi")
         .then(function (response) {
             return response.json();
         })
         .then(function (myJson) {
             document.getElementById('deg').textContent = 'Connected Antenna: Optibeam@' + myJson.Optibeam.Deg + '°'
-            //prep: document.getElementById('deg').textContent =  myJson.HeaderText;
+            // bald, ja: document.getElementById('deg').textContent = 'Connected Antenna: ' + myJson.HeaderText;
             console.log(myJson.Deg);
         })
         .catch(function (error) {
