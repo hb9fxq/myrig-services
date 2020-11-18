@@ -35,6 +35,13 @@ func CreateRouter() *mux.Router {
 			handlers.AntHandler,
 			globals.GlobalAppCtx,
 		}, globals.Route{
+			"rotor",
+			"GET",
+			"/kiwi",
+			true,
+			handlers.KiwistatusHandler,
+			globals.GlobalAppCtx,
+		}, globals.Route{
 			"debug",
 			"GET",
 			"/debug",
