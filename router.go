@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/krippendorf/myrig-services/globals"
-	"github.com/krippendorf/myrig-services/handlers"
+	"github.com/hb9fxq/myrig-services/globals"
+	"github.com/hb9fxq/myrig-services/handlers"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -17,7 +17,7 @@ func CreateRouter() *mux.Router {
 			"/",
 			true,
 			handlers.IndexHandler,
-			appCtx,
+			globals.GlobalAppCtx,
 		},
 		globals.Route{
 			"rotor",
@@ -25,7 +25,7 @@ func CreateRouter() *mux.Router {
 			"/rotor",
 			true,
 			handlers.RotorHandler,
-			appCtx,
+			globals.GlobalAppCtx,
 		},
 		globals.Route{
 			"rotor",
@@ -33,14 +33,14 @@ func CreateRouter() *mux.Router {
 			"/ant",
 			true,
 			handlers.AntHandler,
-			appCtx,
+			globals.GlobalAppCtx,
 		}, globals.Route{
 			"debug",
 			"GET",
 			"/debug",
 			false,
 			handlers.DebugHandler,
-			appCtx,
+			globals.GlobalAppCtx,
 		},
 	}
 

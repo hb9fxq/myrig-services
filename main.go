@@ -1,25 +1,27 @@
 package main
 
 import (
-	"github.com/krippendorf/myrig-services/globals"
+	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/hb9fxq/myrig-services/globals"
+	"github.com/hb9fxq/myrig-services/polling"
 	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 )
-
-var appCtx *globals.ApplicationContext
 
 func main() {
 	var appContext globals.ApplicationContext
-	appCtx = &appContext
+	globals.GlobalAppCtx = &appContext
 
 	readApplicationConfig()
+	openMqttClient()
 
-	go startPollingRotor()
-	go startPollingAnt()
+	go polling.StartPollingRotor()
+	go polling.StartPollingAnt()
 
 	go func() {
 		router := CreateRouter()
@@ -30,6 +32,17 @@ func main() {
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 
 	<-c
+}
+
+func openMqttClient() {
+	opts := mqtt.NewClientOptions().AddBroker(globals.GlobalAppCtx.MqttBroker).SetClientID(globals.GlobalAppCtx.MqttClientId)
+	opts.SetKeepAlive(2 * time.Second)
+	opts.SetPingTimeout(1 * time.Second)
+	opts.SetCleanSession(false)
+	globals.GlobalAppCtx.MqttClient = mqtt.NewClient(opts)
+	if token := globals.GlobalAppCtx.MqttClient.Connect(); token.Wait() && token.Error() != nil {
+		panic(token.Error())
+	}
 }
 
 func readApplicationConfig() {
@@ -43,5 +56,5 @@ func readApplicationConfig() {
 	if err != nil { // Handle errors reading the config file
 		log.Panicf("fatal error: %s", err)
 	}
-	viper.Unmarshal(&appCtx)
+	viper.Unmarshal(&globals.GlobalAppCtx)
 }

@@ -1,7 +1,7 @@
-package main
+package polling
 
 import (
-	"github.com/krippendorf/myrig-services/globals"
+	"github.com/hb9fxq/myrig-services/globals"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -10,23 +10,25 @@ import (
 	"time"
 )
 
-func startPollingRotor() {
-	var rotorStatus globals.RotorStatusType
-	appCtx.RotorStatus = &rotorStatus
-	appCtx.RotorStatus.Deg = 1000
+func StartPollingRotor() {
+
+	globals.GlobalAppCtx.RotorStatus = &globals.RotorStatusType{}
+	globals.GlobalAppCtx.LoopRotorStatus = &globals.RotorStatusType{}
 
 	for {
-		updateRotorStatus()
+		updateRotorStatus(globals.GlobalAppCtx.RotorstatusUrl, globals.GlobalAppCtx.RotorStatus)
+		updateRotorStatus(globals.GlobalAppCtx.LoopRotorstatusUrl, globals.GlobalAppCtx.LoopRotorStatus)
 		<-time.After(10 * time.Second)
-		updateRotorStatus()
 	}
 }
 
-func updateRotorStatus() {
-	getResult := getHttpString(appCtx.RotorstatusUrl)
-	appCtx.RotorStatus.Deg = 1000
+func updateRotorStatus(url string, statusType *globals.RotorStatusType) {
+	getResult := getHttpString(url)
+	statusType.Deg = 1000
+
 	if len(getResult) == 0 {
 		log.Printf("/rotatorcontrol/get operation failed\n")
+		return
 	}
 
 	tokens := strings.Split(getResult, "|")
@@ -35,19 +37,22 @@ func updateRotorStatus() {
 	if err != nil {
 		log.Printf("HTTP GET ERR: %s\n", err)
 	} else {
-		appCtx.RotorStatus.Deg = stateInt
+		statusType.Deg = stateInt
 	}
+
 }
 
 func getHttpString(url string) (responseString string) {
 
+	responseString = ""
 	resp, err := http.Get(url)
 
 	if err != nil {
 		log.Printf("HTTP GET ERR: %s\n", err)
+		return
 	}
 
-	if resp.StatusCode == 200 {
+	if resp != nil && resp.StatusCode == 200 {
 		bodyBytes, err2 := ioutil.ReadAll(resp.Body)
 
 		if err2 != nil {

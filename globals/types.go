@@ -1,9 +1,12 @@
 package globals
 
 import (
+	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"net/http"
 	"time"
 )
+
+var GlobalAppCtx *ApplicationContext
 
 type ApiKeys struct {
 	User string
@@ -11,13 +14,16 @@ type ApiKeys struct {
 }
 
 type ApplicationContext struct {
-	ListenString   string
-	RotorstatusUrl string
-	RotorStatus    *RotorStatusType
-	AntennaStatus  *AntennaStatusType
-	ApiKeys        []*ApiKeys
-	MqttBroker     string
-	MqttClientId   string
+	ListenString       string
+	RotorstatusUrl     string
+	LoopRotorstatusUrl string
+	RotorStatus        *RotorStatusType
+	AntennaStatus      *AntennaStatusType
+	LoopRotorStatus    *RotorStatusType
+	ApiKeys            []*ApiKeys
+	MqttBroker         string
+	MqttClientId       string
+	MqttClient         mqtt.Client
 }
 
 type RotorStatusType struct {

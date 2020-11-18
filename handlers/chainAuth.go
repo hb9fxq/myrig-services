@@ -3,7 +3,7 @@ package handlers
 import (
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/krippendorf/myrig-services/globals"
+	"github.com/hb9fxq/myrig-services/globals"
 	"log"
 	"net/http"
 )
