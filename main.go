@@ -22,6 +22,7 @@ func main() {
 
 	go polling.StartPollingRotor()
 	go polling.StartPollingAnt()
+	go polling.StartPollingSmartSdr()
 
 	go func() {
 		router := CreateRouter()

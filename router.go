@@ -35,6 +35,20 @@ func CreateRouter() *mux.Router {
 			handlers.AntHandler,
 			globals.GlobalAppCtx,
 		}, globals.Route{
+			"slices",
+			"GET",
+			"/slices",
+			true,
+			handlers.SliceHandler,
+			globals.GlobalAppCtx,
+		}, globals.Route{
+			"slices",
+			"GET",
+			"/panadapters",
+			true,
+			handlers.PanadapterHandler,
+			globals.GlobalAppCtx,
+		}, globals.Route{
 			"rotor",
 			"GET",
 			"/kiwi",
